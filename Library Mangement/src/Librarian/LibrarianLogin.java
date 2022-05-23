@@ -1,8 +1,12 @@
 package Librarian;
 
+import Connection.ConnectDb;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.Font;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LibrarianLogin implements ActionListener {
 
@@ -70,14 +74,32 @@ public class LibrarianLogin implements ActionListener {
         String userName = userField.getText();
         String password = String.valueOf(passField.getPassword()); // getPassword returns char array
 
-        if (e.getSource().equals(loginBtn))
-        {
+        if (e.getSource().equals(loginBtn)) {
 
-            if (userName.equals("") || userName.equals("") && password.equals(""))
-            {
-                frame.dispose();
-                LibrarianMenu libMenu = new LibrarianMenu();
-                libMenu.frame.setVisible(true);
+            Connection conn = ConnectDb.connectDatabase();
+
+            String SQL = "SELECT * FROM LIBRARIAN WHERE NAME = ? AND PASSWORD = ?";
+
+            try {
+                PreparedStatement pstmt = conn.prepareStatement(SQL);
+
+                pstmt.setString(1, userName);
+                pstmt.setString(2, password);
+
+                ResultSet resultSet = pstmt.executeQuery();
+
+                if (!resultSet.next()) {
+                    JOptionPane.showMessageDialog(frame, "Please enter the correct username or password");
+                } else {
+                    frame.dispose();
+                    LibrarianMenu libMenu = new LibrarianMenu();
+                    libMenu.frame.setVisible(true);
+                }
+                conn.close();
+                System.out.println("Connection Closed");
+
+            } catch (SQLException ex) {
+                Logger.getLogger(LibrarianLogin.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }

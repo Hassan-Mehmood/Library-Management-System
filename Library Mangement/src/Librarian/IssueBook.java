@@ -77,31 +77,47 @@ public class IssueBook implements ActionListener {
         frame.add(backBtn);
     }
 
-    private void issuebook(String SQL)
+    private void bookIssue(Connection conn)
     {
-        JOptionPane.showMessageDialog(frame, SQL);
+        String SQL = "INSERT INTO ISSUEDBOOKS(CALLNO,STUDENTID,STUDENTNAME,STUDENTCONTACT) VALUES(?,?,?,?)";
+
+        try {
+            PreparedStatement pstmt = conn.prepareCall(SQL);
+
+            pstmt.setString(1, callField.getText());
+            pstmt.setString(2, idField.getText());
+            pstmt.setString(3, nameField.getText());
+            pstmt.setString(4, contactField.getText());
+
+            int affectedRows = pstmt.executeUpdate();
+
+            if (affectedRows > 0) {
+                JOptionPane.showMessageDialog(frame, "Book issued");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Could not issue the book");
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(IssueBook.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
         if (e.getSource().equals(issueBook) && (callField.getText().equals("")
-                || nameField.getText().equals("") || idField.getText().equals("") || contactField.getText().equals("")))
-        {
+                || nameField.getText().equals("") || idField.getText().equals("") || contactField.getText().equals(""))) {
             JOptionPane.showMessageDialog(frame, "Please enter all the fields");
             return;
         }
 
-        if (e.getSource().equals(issueBook))
-        {
+        if (e.getSource().equals(issueBook)) {
             Connection conn = ConnectDb.connectDatabase();
 
             // Checking if the Book being issued is available in the database or not
             String bookCheck = "SELECT * FROM BOOKS WHERE CALLNO = ?";
-            String SQL = "INSERT INTO ISSUEDBOOKS(CALLNO,STUDENTID,STUDENTNAME,STUDENTCONTACT) VALUES(?,?,?,?)";
 
-            try
-            {
+            try {
                 PreparedStatement pstmt = conn.prepareCall(bookCheck);
 
                 pstmt.setString(1, callField.getText());
@@ -109,22 +125,25 @@ public class IssueBook implements ActionListener {
                 // executeQuery() method is used to execute statements that returns tabular data (example SELECT). It returns an object of the class ResultSet.
                 ResultSet resultSet = pstmt.executeQuery();
 
-                if (resultSet.next())
-                {
-                    issuebook(SQL);
-                } else
-                {
-                    System.out.println("Does not exists");
+                if (resultSet.next()) {
+                    // If we have the book in the database then we will Issue the book
+                    bookIssue(conn);
+                } else {
+                    JOptionPane.showMessageDialog(frame, "THe book you are trying to issue does not exists with us");
                 }
 
                 conn.close();
                 System.out.println("Connection Closed");
 
-            } catch (SQLException ex)
-            {
+            } catch (SQLException ex) {
                 Logger.getLogger(IssueBook.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
 
+        if (e.getSource().equals(backBtn)) {
+            frame.dispose();
+            LibrarianMenu menu = new LibrarianMenu();
+            menu.frame.setVisible(true);
         }
 
     }

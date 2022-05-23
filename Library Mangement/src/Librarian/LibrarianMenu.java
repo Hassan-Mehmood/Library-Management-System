@@ -1,5 +1,6 @@
 package Librarian;
 
+import Main.Window;
 import java.awt.Font;
 import java.awt.event.*;
 import javax.swing.*;
@@ -12,7 +13,7 @@ public class LibrarianMenu implements ActionListener {
 
     public LibrarianMenu()
     {
-        frame = new JFrame();
+        frame = new JFrame("Librarian Menu");
         frame.setSize(500, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
@@ -72,18 +73,34 @@ public class LibrarianMenu implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        if (e.getSource().equals(addBooks))
-        {
+        if (e.getSource().equals(addBooks)) {
             frame.dispose();
             AddBooks add = new AddBooks();
             add.frame.setVisible(true);
         }
-        if (e.getSource().equals(issueBooks))
-        {
+        if (e.getSource().equals(issueBooks)) {
             frame.dispose();
             IssueBook issue = new IssueBook();
             issue.frame.setVisible(true);
         }
+        if (e.getSource().equals(viewBooks)) {
+            frame.dispose();
+            ViewBooks view = new ViewBooks();
+            view.frame.setVisible(true);
+        }
+        if (e.getSource().equals(viewIssueBooks)) {
+            frame.dispose();
+            ViewIssuedBooks view = new ViewIssuedBooks();
+            view.frame.setVisible(true);
+        }
+        if (e.getSource().equals(returnBooks)) {
+            frame.dispose();
+            ReturnBooks returnBook = new ReturnBooks();
+            returnBook.frame.setVisible(true);
+        }
+        if (e.getSource().equals(logout)) {
+            frame.dispose();
+            Window window = new Window();
+        }
     }
-
 }
