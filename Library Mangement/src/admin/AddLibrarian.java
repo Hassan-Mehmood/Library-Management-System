@@ -101,8 +101,7 @@ public class AddLibrarian implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) 
   {  
-      if(e.getSource().equals(addLib)) 
-      {
+      if (e.getSource().equals(addLib)) {
           String password = String.valueOf(passField.getPassword());
           // emailField, cityField, contactField
           if (nameField.getText().equals("")|| password.equals("") || 

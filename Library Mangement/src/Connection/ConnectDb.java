@@ -13,16 +13,13 @@ public class ConnectDb {
 
     public static Connection connectDatabase()
     {
-        try
-        {
+        try {
             conn = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
-            if (conn != null)
-            {
+            if (conn != null) {
                 System.out.println("Connectin Completed");
             }
 
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("ERROR: " + e.getMessage());
         }
 
@@ -31,15 +28,12 @@ public class ConnectDb {
 
     public static void connectionClose()
     {
-        if (conn != null)
-        {
-            try
-            {
+        if (conn != null) {
+            try {
                 conn.close();
                 System.out.println("Connection Closed");
 
-            } catch (SQLException ex)
-            {
+            } catch (SQLException ex) {
                 Logger.getLogger(ConnectDb.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
